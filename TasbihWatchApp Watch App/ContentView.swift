@@ -6,16 +6,31 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct ContentView: View {
+    @AppStorage("tasbihCount") private var count = 0
+    @FocusState private var isFocused: Bool
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack {
+            Color.black
+                .edgesIgnoringSafeArea(.all)
+
+            Text("\(count)")
+                .font(.system(size: 48, weight: .bold))
+                .foregroundColor(.green)
         }
-        .padding()
+        .focusable(true)
+
+        .onTapGesture {
+            count += 1
+            WKInterfaceDevice.current().play(.click)
+        }
+        .onLongPressGesture {
+            count = 0
+            WKInterfaceDevice.current().play(.success)
+        }
     }
 }
 
