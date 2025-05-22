@@ -11,12 +11,13 @@ import WatchKit
 struct ContentView: View {
     @AppStorage("tasbihCount") private var count = 0
     @AppStorage("isDarkMode") private var isDarkMode = true
-
+    @State private var displayCount = 0
+    
     var body: some View {
         ZStack {
             (isDarkMode ? Color.black : Color.white)
                 .edgesIgnoringSafeArea(.all)
-
+            
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
@@ -24,13 +25,15 @@ struct ContentView: View {
                 }
                 .padding(.top, -50)
                 .padding(.trailing, 80)
-
+                
                 Spacer()
-
-                Text("\(count)")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(isDarkMode ? .green : .blue)
-
+                
+                AnimatedCounterView(
+                    count: count,
+                    displayCount: $displayCount,
+                    color: isDarkMode ? .green : .blue
+                )
+                
                 Spacer()
             }
         }
@@ -41,10 +44,14 @@ struct ContentView: View {
         }
         .onLongPressGesture {
             count = 0
+            displayCount = 0
             WKInterfaceDevice.current().play(.success)
         }
+        .onAppear {
+            displayCount = count
+        }
     }
-
+    
     private var modeToggle: some View {
         Button {
             withAnimation { isDarkMode.toggle() }
@@ -60,12 +67,31 @@ struct ContentView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
-
+    
     private func checkMilestone() {
         WKInterfaceDevice.current().play(.click)
         if count == 33 || count == 66 || count == 99 || (count % 100 == 0 && count != 0) {
             WKInterfaceDevice.current().play(.notification)
         }
+    }
+}
+
+struct AnimatedCounterView: View {
+    let count: Int
+    @Binding var displayCount: Int
+    let color: Color
+    
+    var body: some View {
+        Text("\(displayCount)")
+            .font(.system(size: 48, weight: .bold))
+            .foregroundColor(color)
+            .contentTransition(.numericText(countsDown: false))
+            .animation(.easeInOut(duration: 0.3), value: displayCount)
+            .onChange(of: count) { oldValue, newValue in
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    displayCount = newValue
+                }
+            }
     }
 }
 
