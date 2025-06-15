@@ -115,4 +115,4 @@ TasbihWatchApp/
 - Email: [zeeshanxkhan05@gmail.com](mailto:zeeshanxkhan05@gmail.com)
 - LinkedIn: https://www.linkedin.com/in/zeeshankhan05/
 
-**"And remember your Lord much and exalt [Him with praise] in the evening and the morning."** - *Quran 3:41*
+**"Remember your Lord often and glorify ˹Him˺ morning and evening."** - *Quran 3:41*
